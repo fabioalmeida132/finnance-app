@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col space-y-1 w-full">
     <label :for="id">{{label}}</label>
-    <select :name="id" :id="id" @input="updateValue">
+    <select :id="id" v-model="localValue">
       <option value="" selected disabled>Selecione uma categoria</option>
-      <option :value="option.id" v-for="(option, index) in options" :key="index">
+      <option :value="option.id" v-for="(option, index) in options" :key="index" :selected="categoryId === option.id">
         {{option.category}}
       </option>
     </select>
@@ -15,17 +15,40 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: {
-    options: Array,
-    id: [String,Number],
+    categoryId: {
+      type: [String,Number],
+      default: ''
+    },
     label: String,
     value: {
-      type: [String, Number]
+      type: [String,Number]
     }
   },
+  data(){
+    return {
+      id: ''
+    }
+  },
+  computed: {
+    localValue: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit('input', value);
+      }
+    },
+    options(){
+      return this.$store.state.categories
+    },
+  },
   methods: {
-    updateValue(event: any) {
+    updateValue(event: { target: HTMLInputElement }) {
       this.$emit('input', event.target.value)
     }
+  },
+  mounted () {
+    this.id = this.lodash.uniqueId();
   }
 })
 </script>

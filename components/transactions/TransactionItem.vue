@@ -1,19 +1,19 @@
 <template>
   <div class="bg-white border-dashed rounded-md my-3 px-5 py-5 shadow-md">
-    <span class="bg-violet-500 text-white px-2 py-0.5 rounded-md">Categoria</span>
+    <span class="bg-violet-500 text-white px-2 py-0.5 rounded-md"> {{ transaction.category }}</span>
     <div class="flex justify-between">
-      <span>Descrição</span>
+      <span>{{ transaction.description }}</span>
       <div>
         <div class="font-bold flex items-center gap-2.5">
-          <font-awesome-icon icon="fa-solid fa-minus" class="text-red-600" v-if="valor <= 0"/>
+          <font-awesome-icon icon="fa-solid fa-minus" class="text-red-600" v-if="transaction.value <= 0"/>
           <font-awesome-icon icon="fa-solid fa-plus" class="text-green-600" v-else/>
-          <span>R$ 50,00</span>
+          <span>{{ transaction.valueMoney }}</span>
           <font-awesome-icon icon="fa-solid fa-chevron-up" v-if="isShowing" @click.prevent="isShowing = !isShowing"/>
           <font-awesome-icon icon="fa-solid fa-chevron-down" v-else @click.prevent="isShowing = !isShowing"/>
         </div>
       </div>
     </div>
-    <TransactionEdit class="mt-2" v-show="isShowing" @cancel="isShowing = false"/>
+    <TransactionEdit class="mt-2" v-show="isShowing" @cancel="isShowing = false" :transaction="transaction"/>
   </div>
 </template>
 
@@ -24,7 +24,10 @@ import TransactionEdit from "~/components/transactions/TransactionEdit.vue";
 export default Vue.extend({
   components: {TransactionEdit},
   props: {
-    valor: String
+    transaction: {
+      type: Object,
+      required: true,
+    }
   },
   data(){
     return {

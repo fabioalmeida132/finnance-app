@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="grid grid-cols-2 justify-between gap-5 sm:grid-cols-4">
-      <BaseInput type="date" id="data-transacao" label="Data da Transação"/>
-      <BaseInput type="money" id="valor" label="Valor" v-model="money" :value="money"/>
-      <BaseInput type="text" id="descricao" label="Descrição"/>
-      <BaseSelect id="categoria" label="Categoria" :options="options" v-model="optionSelected"/>
+      <BaseInput type="date" label="Data da Transação" v-model="date"/>
+      <BaseInput type="money" label="Valor" v-model="money" :value="money"/>
+      <BaseInput type="text" label="Descrição" v-model="descricao"/>
+      <BaseSelect label="Categoria" v-model="optionSelected" :category-id="optionSelected"/>
     </div>
     <div class="text-right mt-3">
-      <BaseButton title="Excluir" type="cancel" @click="$emit('cancel')"/>
-      <BaseButton title="Salvar"/>
+      <BaseButton title="Excluir" type="cancel" @click="exclude"/>
+      <BaseButton title="Salvar" @click="save"/>
     </div>
   </div>
 
@@ -16,30 +16,36 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapActions } from 'vuex'
 import BaseInput from "~/components/bases/BaseInput.vue";
 import BaseButton from "~/components/bases/BaseButton.vue";
 import BaseSelect from "~/components/bases/BaseSelect.vue";
 
 export default Vue.extend({
+  props: ['transaction'],
   components: {BaseSelect, BaseButton, BaseInput},
   data(){
     return {
-      optionSelected: '',
-      money: 0,
-      options: [
-        {
-          id: 1,
-          category: 'Casa'
-        },
-        {
-          id: 2,
-          category: 'Diversão'
-        },
-      ]
+      date: this.transaction.date,
+      money: Number(this.transaction.value),
+      descricao: this.transaction.description,
+      optionSelected: this.transaction.categoryId
     }
   },
   methods: {
-
+    ...mapActions(['removeTransaction','updateTransaction']),
+    exclude(){
+      this.removeTransaction(this.transaction)
+    },
+    save(){
+      this.updateTransaction({
+        id: this.transaction.id,
+        date: this.date,
+        value: this.money,
+        description: this.descricao,
+        category: this.optionSelected
+      })
+    }
   }
 })
 </script>

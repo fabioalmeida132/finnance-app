@@ -2,14 +2,14 @@
   <transition name="slide-fade">
     <div class="bg-blue-100 border-dashed border-2 border-indigo-200 rounded-md my-3 px-5 py-5">
       <div class="grid grid-cols-2 justify-between gap-5 sm:grid-cols-4 ">
-        <BaseInput type="date" id="data-transacao" label="Data da Transação"/>
+        <BaseInput type="date" id="data-transacao" label="Data da Transação" v-model="date"/>
         <BaseInput type="money" id="valor" label="Valor" v-model="money" :value="money"/>
-        <BaseInput type="text" id="descricao" label="Descrição"/>
-        <BaseSelect id="categoria" label="Categoria" :options="options" v-model="optionSelected"/>
+        <BaseInput type="text" id="descricao" label="Descrição" v-model="descricao"/>
+        <BaseSelect id="categoria" label="Categoria" v-model="optionSelected" :category-id="optionSelected"/>
       </div>
       <div class="text-right mt-3">
         <BaseButton title="Cancelar" type="cancel" @click="$emit('cancel')"/>
-        <BaseButton title="Adicionar"/>
+        <BaseButton title="Adicionar" @click="add"/>
       </div>
     </div>
   </transition>
@@ -20,27 +20,34 @@ import Vue from 'vue'
 import BaseInput from "~/components/bases/BaseInput.vue";
 import BaseButton from "~/components/bases/BaseButton.vue";
 import BaseSelect from "~/components/bases/BaseSelect.vue";
+import { mapActions } from 'vuex'
 
 export default Vue.extend({
   components: {BaseSelect, BaseButton, BaseInput},
   data(){
     return {
       optionSelected: '',
-      money: 150,
-      options: [
-        {
-          id: 1,
-          category: 'Casa'
-        },
-        {
-          id: 2,
-          category: 'Diversão'
-        },
-      ]
+      money: 0,
+      descricao: '',
+      date: ''
     }
   },
   methods: {
-
+    ...mapActions(['addTransaction']),
+    add(){
+      const transaction = {
+        description: this.descricao,
+        value: this.money,
+        date: this.date,
+        category: this.optionSelected
+      }
+      this.addTransaction(transaction)
+      this.money = 0;
+      this.descricao = '';
+      this.date = '';
+      this.optionSelected = '';
+      this.$emit('cancel')
+    },
   }
 })
 </script>
