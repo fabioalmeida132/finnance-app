@@ -2,7 +2,7 @@
   <div class="flex flex-col space-y-1 w-full">
     <label :for="id">{{label}}</label>
     <select :id="id" v-model="localValue">
-      <option value="" selected disabled>Selecione uma categoria</option>
+      <option value="" selected :disabled="disabled">{{placeholder}}</option>
       <option :value="option.id" v-for="(option, index) in options" :key="index" :selected="categoryId === option.id">
         {{option.category}}
       </option>
@@ -15,6 +15,14 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: {
+    disabled: {
+      type: Boolean,
+      default: true
+    },
+    placeholder: {
+      type: String,
+      default: 'Selecione uma categoria'
+    },
     categoryId: {
       type: [String,Number],
       default: ''

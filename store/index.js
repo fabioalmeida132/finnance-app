@@ -1,4 +1,8 @@
 export const state = () => ({
+  filter: {
+    categoryId: '',
+  },
+  transactionsFiltered: [],
   categories: [
     {
       id: 1,
@@ -84,11 +88,18 @@ export const mutations = {
   updateTransaction (state, transaction) {
     const index = state.transactions.find(t => t.id === transaction.id)
     state.transactions.splice(state.transactions.indexOf(index), 1, transaction)
+  },
+  setFilter (state, filter) {
+    state.filter = filter
   }
 }
 
 export const actions = {
-   addTransaction(state, transaction) {
+
+  setFilter (state, filter) {
+    this.commit('setFilter', filter)
+  },
+  addTransaction(state, transaction) {
      let category = this.state.categories.find(category => category.id === Number(transaction.category))
 
      let transactionToAdd = {
@@ -126,7 +137,7 @@ export const getters = {
     return state.categories
   },
   transactions(state) {
-    return state.transactions.map(transaction => {
+    let transactionsMap =  state.transactions.map(transaction => {
       return {
         ...transaction,
         valueMoney: Number(transaction.value).toLocaleString('pt-BR',
@@ -136,9 +147,16 @@ export const getters = {
         categoryId: state.categories.find(category => category.category === transaction.category).id
       }
     })
+
+    if (state.filter.categoryId !== ''){
+      return transactionsMap.filter(transaction => transaction.categoryId === Number(state.filter.categoryId))
+    }else{
+      return transactionsMap
+    }
+
   },
-  totalDespenses(state) {
-    let totalCalculate = state.transactions.reduce((total, transaction) => {
+  totalDespenses(state,getters) {
+    let totalCalculate = getters.transactions.reduce((total, transaction) => {
       if (Number(transaction.value) > 0) {
         return total
       } else {
@@ -151,8 +169,8 @@ export const getters = {
         signDisplay: 'never'
       })
   },
-  totalReceived(state) {
-    let totalCalculate = state.transactions.reduce((total, transaction) => {
+  totalReceived(state,getters) {
+    let totalCalculate = getters.transactions.reduce((total, transaction) => {
       if (Number(transaction.value) > 0) {
         return total + Number(transaction.value)
       } else {
@@ -166,8 +184,8 @@ export const getters = {
       })
   },
 
-  totalFinal(state) {
-    let totalCalculate = state.transactions.reduce((total, transaction) => {
+  totalFinal(state,getters) {
+    let totalCalculate = getters.transactions.reduce((total, transaction) => {
       return total + Number(transaction.value)
     },0)
 

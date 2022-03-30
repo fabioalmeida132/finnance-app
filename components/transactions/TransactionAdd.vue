@@ -35,18 +35,20 @@ export default Vue.extend({
   methods: {
     ...mapActions(['addTransaction']),
     add(){
-      const transaction = {
-        description: this.descricao,
-        value: this.money,
-        date: this.date,
-        category: this.optionSelected
+      if (this.optionSelected !== '') {
+        const transaction = {
+          description: this.descricao,
+          value: this.money,
+          date: this.date,
+          category: this.optionSelected
+        }
+        this.addTransaction(transaction)
+        this.money = 0;
+        this.descricao = '';
+        this.date = '';
+        this.optionSelected = '';
+        this.$emit('cancel')
       }
-      this.addTransaction(transaction)
-      this.money = 0;
-      this.descricao = '';
-      this.date = '';
-      this.optionSelected = '';
-      this.$emit('cancel')
     },
   }
 })
