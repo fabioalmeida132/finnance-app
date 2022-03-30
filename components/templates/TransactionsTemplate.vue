@@ -4,6 +4,7 @@
       <BaseButton @click="isShowing = !isShowing" title="Nova Transação"/>
     </div>
     <TransactionAdd v-show="isShowing" @cancel="isShowing = false"/>
+    <TransactionTotal/>
     <TransactionList/>
   </div>
 </template>
@@ -13,9 +14,10 @@ import Vue from 'vue'
 import TransactionAdd from "~/components/transactions/TransactionAdd.vue";
 import BaseButton from "~/components/bases/BaseButton.vue";
 import TransactionList from "~/components/transactions/TransactionList.vue";
+import TransactionTotal from "~/components/transactions/TransactionTotal.vue";
 
 export default Vue.extend({
-  components: {TransactionList, BaseButton, TransactionAdd},
+  components: {TransactionTotal, TransactionList, BaseButton, TransactionAdd},
   data(){
     return{
       isShowing: false,

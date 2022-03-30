@@ -136,6 +136,45 @@ export const getters = {
         categoryId: state.categories.find(category => category.category === transaction.category).id
       }
     })
-  }
+  },
+  totalDespenses(state) {
+    let totalCalculate = state.transactions.reduce((total, transaction) => {
+      if (Number(transaction.value) > 0) {
+        return total
+      } else {
+        return total + Number(transaction.value)
+      }
+    },0)
+
+    return Number(totalCalculate).toLocaleString('pt-BR',
+      { style: 'currency', currency: 'BRL',
+        signDisplay: 'never'
+      })
+  },
+  totalReceived(state) {
+    let totalCalculate = state.transactions.reduce((total, transaction) => {
+      if (Number(transaction.value) > 0) {
+        return total + Number(transaction.value)
+      } else {
+        return total
+      }
+    },0)
+
+    return Number(totalCalculate).toLocaleString('pt-BR',
+      { style: 'currency', currency: 'BRL',
+        signDisplay: 'never'
+      })
+  },
+
+  totalFinal(state) {
+    let totalCalculate = state.transactions.reduce((total, transaction) => {
+      return total + Number(transaction.value)
+    },0)
+
+    return Number(totalCalculate).toLocaleString('pt-BR',
+      { style: 'currency', currency: 'BRL',
+        signDisplay: 'never'
+      })
+  },
 }
 

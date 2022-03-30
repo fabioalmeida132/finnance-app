@@ -8,8 +8,8 @@
           <font-awesome-icon icon="fa-solid fa-minus" class="text-red-600" v-if="transaction.value <= 0"/>
           <font-awesome-icon icon="fa-solid fa-plus" class="text-green-600" v-else/>
           <span>{{ transaction.valueMoney }}</span>
-          <font-awesome-icon icon="fa-solid fa-chevron-up" v-if="isShowing" @click.prevent="isShowing = !isShowing"/>
-          <font-awesome-icon icon="fa-solid fa-chevron-down" v-else @click.prevent="isShowing = !isShowing"/>
+          <font-awesome-icon icon="fa-solid fa-chevron-up" class="select-none cursor-pointer" v-if="isShowing" @click.prevent="isShowing = !isShowing"/>
+          <font-awesome-icon icon="fa-solid fa-chevron-down" class="select-none cursor-pointer" v-else @click.prevent="isShowing = !isShowing"/>
         </div>
       </div>
     </div>
